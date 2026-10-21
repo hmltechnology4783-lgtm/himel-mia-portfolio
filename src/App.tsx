@@ -145,17 +145,32 @@ function App() {
     event.preventDefault()
     const form = event.currentTarget
     if (!form.reportValidity()) return
-    if (!personal.email) {
-      setFormStatus('Email is not configured yet. Add your real address in src/data.ts to enable this mailto form.')
+
+    const values = new FormData(form)
+    const name = String(values.get('name') ?? '').trim()
+    const email = String(values.get('email') ?? '').trim()
+    const subject = String(values.get('subject') ?? '').trim()
+    const message = String(values.get('message') ?? '')
+    if (!name || !email || !subject || !message.trim()) {
+      setFormStatus('Please complete every field before preparing your email.')
       return
     }
-    const values = new FormData(form)
-    const subject = encodeURIComponent(String(values.get('subject')))
-    const body = encodeURIComponent(
-      `From: ${String(values.get('name'))} (${String(values.get('email'))})\n\n${String(values.get('message'))}`,
-    )
-    window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`
-    setFormStatus('Your email app should open with your message prepared. Review and send it there; this site does not send messages.')
+
+    const composeUrl = new URL('https://mail.google.com/mail/')
+    composeUrl.search = new URLSearchParams({
+      view: 'cm',
+      fs: '1',
+      to: personal.email,
+      su: subject,
+      body: `From: ${name} (${email})\n\n${message}`,
+    }).toString()
+    const composeWindow = window.open(composeUrl.toString(), '_blank')
+    if (!composeWindow) {
+      setFormStatus('Your browser blocked the Gmail tab. Allow pop-ups for this site and submit again. Your entries are still here; no email has been sent.')
+      return
+    }
+    composeWindow.opener = null
+    setFormStatus('Gmail opened with your draft. Review it and press Send in Gmail; this site does not send email.')
   }
 
   const emailHref = `mailto:${personal.email}`
@@ -287,7 +302,7 @@ function App() {
             </div>
             <label>Subject<input name="subject" type="text" placeholder="What would you like to talk about?" required minLength={3} /></label>
             <label>Your message<textarea name="message" placeholder="Tell me a little about it..." rows={4} required minLength={10} /></label>
-            <div className="form-submit-row"><button className="button button-primary" type="submit">Prepare email <Icon name="arrow" size={16} /></button><span>Your email app opens a draft; you send it.</span></div>
+            <div className="form-submit-row"><button className="button button-primary" type="submit">Prepare email <Icon name="arrow" size={16} /></button><span>Gmail opens a draft; review it and press Send there.</span></div>
             <p className="form-status" aria-live="polite" role="status">{formStatus}</p>
           </form>
         </section>
