@@ -41,16 +41,16 @@ const navItems = [
 ] as const
 
 function SocialLinks({ compact = false }: { compact?: boolean }) {
-  const socials: { name: 'github' | 'linkedin' | 'facebook'; label: string; href: string }[] = [
-    { name: 'github', label: 'GitHub', href: personal.social.github },
-    { name: 'linkedin', label: 'LinkedIn', href: personal.social.linkedin },
-    { name: 'facebook', label: 'Facebook', href: personal.social.facebook },
+  const socials: { name: 'github' | 'linkedin' | 'facebook'; label: string; ariaLabel: string; href: string }[] = [
+    { name: 'github', label: 'GitHub', ariaLabel: 'GitHub profile', href: personal.social.github },
+    { name: 'facebook', label: 'Facebook', ariaLabel: 'Facebook profile', href: personal.social.facebook },
+    { name: 'linkedin', label: 'LinkedIn', ariaLabel: 'LinkedIn profile', href: personal.social.linkedin },
   ]
 
   return (
     <div className={`social-links${compact ? ' social-links--compact' : ''}`} aria-label="Social media">
       {socials.map((social) => (
-        <a key={social.name} href={social.href} target="_blank" rel="noreferrer" aria-label={`Himel on ${social.label}`} title={`${social.label} profile — replace placeholder URL in src/data.ts`}>
+        <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.ariaLabel} title={social.label}>
           <Icon name={social.name} size={compact ? 17 : 18} />
         </a>
       ))}
@@ -166,7 +166,7 @@ function App() {
       <a className="skip-link" href="#main">Skip to content</a>
       <header className="site-header">
         <div className="nav-shell">
-          <a className="brand" href="#home" aria-label="Himel Mia, home"><span className="brand-mark">HM<span>.</span></span><span className="brand-name">Himel Mia</span></a>
+          <a className="brand" href="#home" aria-label="Himel Mia homepage"><span className="brand-mark"><svg viewBox="0 0 37 37" aria-hidden="true" focusable="false"><defs><linearGradient id="nav-mark-bg" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#111a2c" /><stop offset="1" stopColor="#090d17" /></linearGradient><linearGradient id="nav-mark-blue" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#a5b7ff" /><stop offset="1" stopColor="#6687f5" /></linearGradient></defs><rect x=".5" y=".5" width="36" height="36" rx="9.5" fill="url(#nav-mark-bg)" stroke="rgba(163,176,209,.25)" /><path d="M8 9v19M8 18h10" fill="none" stroke="#e9edf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M18 28V9l5 7 6-7v19" fill="none" stroke="url(#nav-mark-blue)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg></span><span className="brand-name">Himel Mia</span></a>
           <nav id="main-navigation" className={`main-nav${menuOpen ? ' is-open' : ''}`} aria-label="Main navigation">
             <a className="home-link" href="#home" onClick={() => setMenuOpen(false)}>Home</a>
             {navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}

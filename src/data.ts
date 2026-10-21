@@ -6,9 +6,9 @@ export const personal = {
   photo: '/images/himel-mia.jpg.png',
   photoIsPlaceholder: false,
   social: {
-    github: 'https://github.com/your-username',
+    github: 'https://github.com/hmltechnology4783-lgtm',
     linkedin: 'https://www.linkedin.com/in/your-username/',
-    facebook: 'https://www.facebook.com/your-username',
+    facebook: 'https://www.facebook.com/profile.php?id=61590259569162',
   },
 }
 
